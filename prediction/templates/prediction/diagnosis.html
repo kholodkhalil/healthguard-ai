@@ -1,0 +1,146 @@
+{% extends 'prediction/base.html' %}
+
+{% block content %}
+<div class="w-full max-w-4xl">
+    <div class="bg-brand-gold rounded-t-2xl p-6 text-white flex justify-between items-center shadow-lg">
+        <div>
+            <h2 class="text-2xl font-bold">ملف الفحص الطبي</h2>
+            <p class="opacity-90 text-sm mt-1">يرجى إدخال المؤشرات الحيوية بدقة</p>
+        </div>
+        <div class="text-left bg-white/20 p-3 rounded-lg backdrop-blur-sm">
+            <div class="text-xs opacity-75">المريض</div>
+            <div class="font-bold text-lg">{{ patient.name }}</div>
+        </div>
+    </div>
+
+    <div class="bg-day-card dark:bg-night-card p-8 rounded-b-2xl shadow-2xl border-x border-b border-gray-100 dark:border-blue-900">
+        <form action="{% url 'predict' %}" method="POST">
+            {% csrf_token %}
+            <input type="hidden" name="patient_id" value="{{ patient.id }}">
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+
+                <!-- مجموعة 1 -->
+                <div class="space-y-6">
+                    <h3 class="text-lg font-bold text-gray-700 dark:text-gray-300 border-b pb-2 border-gray-200 dark:border-gray-700">
+                        <i class="fas fa-user-md text-brand-gold ml-2"></i> معلومات أساسية
+                    </h3>
+
+                    <div>
+                        <label class="block text-sm text-gray-500 dark:text-gray-400 mb-1">العمر (age)</label>
+                        <input type="number" name="age" value="{{ patient.age }}" required
+                        class="w-full bg-day-bg dark:bg-night-bg border border-gray-300 dark:border-blue-800 rounded-lg p-3 text-gray-800 dark:text-white focus:border-brand-gold focus:ring-1 focus:ring-brand-gold outline-none transition-all">
+                    </div>
+
+                    <div>
+                        <label class="block text-sm text-gray-500 dark:text-gray-400 mb-1">الجنس (gender)</label>
+                        <select name="gender" required
+                        class="w-full bg-day-bg dark:bg-night-bg border border-gray-300 dark:border-blue-800 rounded-lg p-3 text-gray-800 dark:text-white focus:border-brand-gold focus:ring-1 focus:ring-brand-gold outline-none transition-all">
+                            <option value="1">أنثى (1)</option>
+                            <option value="2">ذكر (2)</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm text-gray-500 dark:text-gray-400 mb-1">الطول سم (height)</label>
+                        <input type="number" name="height" required
+                        class="w-full bg-day-bg dark:bg-night-bg border border-gray-300 dark:border-blue-800 rounded-lg p-3 text-gray-800 dark:text-white focus:border-brand-gold focus:ring-1 focus:ring-brand-gold outline-none transition-all">
+                    </div>
+
+                    <div>
+                        <label class="block text-sm text-gray-500 dark:text-gray-400 mb-1">الوزن كغ (weight)</label>
+                        <input type="number" step="0.1" name="weight" required
+                        class="w-full bg-day-bg dark:bg-night-bg border border-gray-300 dark:border-blue-800 rounded-lg p-3 text-gray-800 dark:text-white focus:border-brand-gold focus:ring-1 focus:ring-brand-gold outline-none transition-all">
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm text-gray-500 dark:text-gray-400 mb-1">ضغط علوي (ap_hi)</label>
+                            <input type="number" name="ap_hi" required
+                            class="w-full bg-day-bg dark:bg-night-bg border border-gray-300 dark:border-blue-800 rounded-lg p-3 text-gray-800 dark:text-white focus:border-brand-gold focus:ring-1 focus:ring-brand-gold outline-none transition-all">
+                        </div>
+                        <div>
+                            <label class="block text-sm text-gray-500 dark:text-gray-400 mb-1">ضغط سفلي (ap_lo)</label>
+                            <input type="number" name="ap_lo" required
+                            class="w-full bg-day-bg dark:bg-night-bg border border-gray-300 dark:border-blue-800 rounded-lg p-3 text-gray-800 dark:text-white focus:border-brand-gold focus:ring-1 focus:ring-brand-gold outline-none transition-all">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- مجموعة 2 -->
+                <div class="space-y-6">
+                    <h3 class="text-lg font-bold text-gray-700 dark:text-gray-300 border-b pb-2 border-gray-200 dark:border-gray-700">
+                        <i class="fas fa-flask text-brand-gold ml-2"></i> تحاليل وعادات
+                    </h3>
+
+                    <div>
+                        <label class="block text-sm text-gray-500 dark:text-gray-400 mb-1">الكوليسترول (cholesterol)</label>
+                        <select name="cholesterol" required
+                        class="w-full bg-day-bg dark:bg-night-bg border border-gray-300 dark:border-blue-800 rounded-lg p-3 text-gray-800 dark:text-white focus:border-brand-gold focus:ring-1 focus:ring-brand-gold outline-none transition-all">
+                            <option value="1">طبيعي (1)</option>
+                            <option value="2">أعلى من الطبيعي (2)</option>
+                            <option value="3">مرتفع (3)</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm text-gray-500 dark:text-gray-400 mb-1">السكر (gluc)</label>
+                        <select name="gluc" required
+                        class="w-full bg-day-bg dark:bg-night-bg border border-gray-300 dark:border-blue-800 rounded-lg p-3 text-gray-800 dark:text-white focus:border-brand-gold focus:ring-1 focus:ring-brand-gold outline-none transition-all">
+                            <option value="1">طبيعي (1)</option>
+                            <option value="2">أعلى من الطبيعي (2)</option>
+                            <option value="3">مرتفع (3)</option>
+                        </select>
+                    </div>
+
+                    <div class="grid grid-cols-3 gap-4">
+                        <div>
+                            <label class="block text-sm text-gray-500 dark:text-gray-400 mb-1">تدخين (smoke)</label>
+                            <select name="smoke" required class="w-full bg-day-bg dark:bg-night-bg border border-gray-300 dark:border-blue-800 rounded-lg p-3">
+                                <option value="0">لا</option>
+                                <option value="1">نعم</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm text-gray-500 dark:text-gray-400 mb-1">كحول (alco)</label>
+                            <select name="alco" required class="w-full bg-day-bg dark:bg-night-bg border border-gray-300 dark:border-blue-800 rounded-lg p-3">
+                                <option value="0">لا</option>
+                                <option value="1">نعم</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm text-gray-500 dark:text-gray-400 mb-1">نشاط (active)</label>
+                            <select name="active" required class="w-full bg-day-bg dark:bg-night-bg border border-gray-300 dark:border-blue-800 rounded-lg p-3">
+                                <option value="0">لا</option>
+                                <option value="1">نعم</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm text-gray-500 dark:text-gray-400 mb-1">BP Category (اختياري)</label>
+                        <input type="text" name="bp_category"
+                        class="w-full bg-day-bg dark:bg-night-bg border border-gray-300 dark:border-blue-800 rounded-lg p-3 text-gray-800 dark:text-white focus:border-brand-gold focus:ring-1 focus:ring-brand-gold outline-none transition-all"
+                        placeholder="مثال: Hypertension Stage 1">
+                    </div>
+
+                    <div>
+                        <label class="block text-sm text-gray-500 dark:text-gray-400 mb-1">BP Category Encoded (اختياري)</label>
+                        <input type="text" name="bp_category_encoded"
+                        class="w-full bg-day-bg dark:bg-night-bg border border-gray-300 dark:border-blue-800 rounded-lg p-3 text-gray-800 dark:text-white focus:border-brand-gold focus:ring-1 focus:ring-brand-gold outline-none transition-all"
+                        placeholder="مثال: Hypertension Stage 1">
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="mt-10 pt-6 border-t border-gray-100 dark:border-blue-900">
+                <button type="submit" class="w-full md:w-auto md:px-12 bg-brand-gold hover:bg-brand-goldHover text-white font-bold py-3 rounded-lg shadow-lg flex items-center justify-center gap-3 mx-auto transform hover:scale-105 transition-all">
+                    <i class="fas fa-microscope text-xl"></i>
+                    <span>بدء التحليل بالذكاء الاصطناعي</span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

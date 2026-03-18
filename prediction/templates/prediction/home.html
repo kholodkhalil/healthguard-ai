@@ -1,0 +1,63 @@
+{% extends 'prediction/base.html' %}
+
+{% block content %}
+<div class="w-full max-w-lg animate-fade-in-up">
+    <!-- رأس البطاقة -->
+    <div class="text-center mb-8">
+        <h2 class="text-4xl font-bold mb-2 text-gray-800 dark:text-white">أهلاً بك</h2>
+        <p class="text-gray-500 dark:text-gray-300">ابدأ بتسجيل بيانات المريض للتشخيص الذكي</p>
+    </div>
+
+    <!-- البطاقة -->
+    <div class="bg-day-card dark:bg-night-card p-8 rounded-2xl shadow-2xl border border-gray-100 dark:border-blue-900 relative overflow-hidden">
+        <!-- زخرفة خلفية بسيطة -->
+        <div class="absolute top-0 left-0 w-full h-1 bg-brand-gold"></div>
+
+        <form action="{% url 'register_patient' %}" method="POST" class="space-y-6">
+            {% csrf_token %}
+            
+            <!-- حقل الاسم -->
+            <div class="relative">
+                <label class="block text-sm font-medium mb-2 text-brand-gold">اسم المريض الكامل</label>
+                <div class="flex items-center bg-day-bg dark:bg-night-bg rounded-lg border border-gray-200 dark:border-blue-800 focus-within:border-brand-gold focus-within:ring-1 focus-within:ring-brand-gold transition-all">
+                    <span class="px-4 text-gray-400"><i class="fas fa-user"></i></span>
+                    <input type="text" name="name" required class="w-full bg-transparent p-3 outline-none text-gray-800 dark:text-white placeholder-gray-400" placeholder="مثال:خلود خليل">
+                </div>
+            </div>
+
+            <!-- العمر ورقم الهاتف (بجانب بعض) -->
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-sm font-medium mb-2 text-brand-gold">العمر</label>
+                    <div class="flex items-center bg-day-bg dark:bg-night-bg rounded-lg border border-gray-200 dark:border-blue-800 focus-within:border-brand-gold transition-all">
+                        <span class="px-4 text-gray-400"><i class="fas fa-calendar-alt"></i></span>
+                        <input type="number" name="age" required class="w-full bg-transparent p-3 outline-none text-gray-800 dark:text-white" placeholder="25">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-2 text-brand-gold">رقم الهاتف</label>
+                    <div class="flex items-center bg-day-bg dark:bg-night-bg rounded-lg border border-gray-200 dark:border-blue-800 focus-within:border-brand-gold transition-all">
+                        <span class="px-4 text-gray-400"><i class="fas fa-phone"></i></span>
+                        <input type="text" name="phone" required class="w-full bg-transparent p-3 outline-none text-gray-800 dark:text-white" placeholder="09...">
+                    </div>
+                </div>
+            </div>
+
+            <!-- البريد الإلكتروني -->
+            <div>
+                <label class="block text-sm font-medium mb-2 text-brand-gold">البريد الإلكتروني (اختياري)</label>
+                <div class="flex items-center bg-day-bg dark:bg-night-bg rounded-lg border border-gray-200 dark:border-blue-800 focus-within:border-brand-gold transition-all">
+                    <span class="px-4 text-gray-400"><i class="fas fa-envelope"></i></span>
+                    <input type="email" name="email" class="w-full bg-transparent p-3 outline-none text-gray-800 dark:text-white" placeholder="example@mail.com">
+                </div>
+            </div>
+
+            <!-- زر الإرسال -->
+            <button type="submit" class="w-full bg-brand-gold hover:bg-brand-goldHover text-white font-bold py-4 rounded-lg shadow-lg transform hover:-translate-y-1 transition-all duration-200 flex justify-center items-center gap-2">
+                <span>متابعة للفحص</span>
+                <i class="fas fa-arrow-left"></i>
+            </button>
+        </form>
+    </div>
+</div>
+{% endblock %}

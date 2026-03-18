@@ -1,0 +1,141 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" class="light"> <!-- البداية بالوضع الفاتح -->
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HealthGuard AI | نظام التنبؤ الذكي</title>
+    <link rel="icon" href="{% static 'images/logo_dark_haf.png' %}" type="image/svg+xml">
+    
+    <!-- خطوط جوجل (Cairo) -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
+    
+    <!-- أيقونات FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- إعداد Tailwind مع الألوان الخاصة بك -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class', // تفعيل الوضع الليلي عبر الكلاس
+            theme: {
+                extend: {
+                    colors: {
+                        // ألوان الوضع الليلي
+                        night: {
+                            bg: '#082c58',      // الخلفية العامة
+                            card: '#183b65',    // خلفية البطاقات
+                        },
+                        // ألوان الوضع النهاري
+                        day: {
+                            bg: '#f5f8ff',      // الخلفية العامة
+                            card: '#ffffff',    // خلفية البطاقات
+                        },
+                        // اللون الذهبي المشترك (Accent)
+                        brand: {
+                            gold: '#b9955c',
+                            goldHover: '#9e7f4e',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Cairo', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* تأثيرات الانتقال الناعمة */
+        body, div, nav, a, button, input {
+            transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+        }
+    </style>
+</head>
+<body class="bg-day-bg text-gray-800 dark:bg-night-bg dark:text-white min-h-screen flex flex-col">
+
+    <!-- شريط التنقل (Navbar) -->
+    <nav class="bg-day-card dark:bg-night-card shadow-lg sticky top-0 z-50 border-b border-gray-200 dark:border-blue-900">
+        <div class="container mx-auto px-6 py-4 flex justify-between items-center">
+            
+            <!-- الشعار -->
+            <a href="{% url 'home' %}" class="flex items-center gap-3 group">
+                <div class="w-10 h-10 bg-brand-gold rounded-full flex items-center justify-center text-white font-bold text-xl shadow-lg group-hover:scale-110 transition-transform">
+                    <img src="{% static 'images/logo_dark_haf.png' %}" alt="Logo" class="w-9 h-9">
+                </div>
+                <span class="text-2xl font-bold text-gray-800 dark:text-white tracking-wide">
+                    Health<span class="text-brand-gold">Guard</span>
+                </span>
+            </a>
+
+            <!-- القائمة وزر التبديل -->
+            <div class="flex items-center gap-6">
+                
+                <!-- روابط التنقل (جديد) -->
+                <div class="hidden md:flex gap-6">
+                    <a href="{% url 'home' %}" class="text-gray-600 dark:text-gray-300 hover:text-brand-gold dark:hover:text-brand-gold font-bold transition-colors flex items-center gap-2">
+                        <i class="fas fa-stethoscope"></i> فحص جديد
+                    </a>
+                    <a href="{% url 'reports' %}" class="text-gray-600 dark:text-gray-300 hover:text-brand-gold dark:hover:text-brand-gold font-bold transition-colors flex items-center gap-2">
+                        <i class="fas fa-file-medical-alt"></i> السجلات
+                    </a>
+                </div>
+
+                <!-- فاصل عمودي (جديد) -->
+                <div class="h-6 w-px bg-gray-300 dark:bg-gray-600 hidden md:block"></div>
+
+                <!-- زر تبديل الوضع -->
+                <button id="theme-toggle" class="w-10 h-10 rounded-full bg-gray-100 dark:bg-blue-900 flex items-center justify-center text-brand-gold hover:bg-brand-gold hover:text-white transition-all shadow-sm">
+                    <i id="theme-icon" class="fas fa-moon text-lg"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+    
+    <!-- المحتوى الرئيسي -->
+    <main class="flex-grow container mx-auto px-4 py-8 flex flex-col items-center justify-center">
+        {% block content %}
+        {% endblock %}
+    </main>
+
+    <!-- الفوتر -->
+    <footer class="bg-day-card dark:bg-night-card text-center py-6 mt-auto border-t border-gray-200 dark:border-blue-900">
+        <p class="text-sm text-gray-500 dark:text-gray-400">
+            © 2026 HealthGuard AI Project. جميع الحقوق محفوظة.
+        </p>
+    </footer>
+
+    <!-- سكربت جافاسكربت للتحكم بالوضع الليلي -->
+    <script>
+        const themeToggleBtn = document.getElementById('theme-toggle');
+        const themeIcon = document.getElementById('theme-icon');
+        const htmlElement = document.documentElement;
+
+        // 1. التحقق من الوضع المحفوظ سابقاً
+        if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            htmlElement.classList.add('dark');
+            themeIcon.classList.remove('fa-moon');
+            themeIcon.classList.add('fa-sun');
+        } else {
+            htmlElement.classList.remove('dark');
+            themeIcon.classList.remove('fa-sun');
+            themeIcon.classList.add('fa-moon');
+        }
+
+        // 2. عند الضغط على الزر
+        themeToggleBtn.addEventListener('click', () => {
+            htmlElement.classList.toggle('dark');
+            
+            if (htmlElement.classList.contains('dark')) {
+                localStorage.setItem('theme', 'dark');
+                themeIcon.classList.remove('fa-moon');
+                themeIcon.classList.add('fa-sun');
+            } else {
+                localStorage.setItem('theme', 'light');
+                themeIcon.classList.remove('fa-sun');
+                themeIcon.classList.add('fa-moon');
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,122 @@
+{% extends 'prediction/base.html' %}
+
+{% block content %}
+<div class="w-full max-w-6xl text-center">
+
+    <h2 class="text-3xl font-bold mb-10 text-gray-800 dark:text-white">تقرير الحالة الصحية</h2>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+
+        <!-- بطاقة القلب -->
+        <div class="bg-day-card dark:bg-night-card rounded-3xl shadow-2xl overflow-hidden border border-gray-200 dark:border-blue-900">
+            <div class="p-8 {% if heart_result == 'positive' %}bg-red-50 dark:bg-red-900/20{% else %}bg-green-50 dark:bg-green-900/20{% endif %}">
+                {% if heart_result == 'positive' %}
+                    <div class="w-20 h-20 bg-red-100 dark:bg-red-800 rounded-full flex items-center justify-center mx-auto mb-4 shadow-inner">
+                        <i class="fas fa-heartbeat text-3xl text-red-600 dark:text-red-200"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-red-600 dark:text-red-400 mb-2">القلب</h3>
+                    <p class="text-red-500 dark:text-red-300 font-bold mb-2">احتمالية إصابة</p>
+                    <p class="text-gray-600 dark:text-gray-300 text-sm">يوصى بمراجعة الطبيب.</p>
+                {% else %}
+                    <div class="w-20 h-20 bg-green-100 dark:bg-green-800 rounded-full flex items-center justify-center mx-auto mb-4 shadow-inner">
+                        <i class="fas fa-heart text-3xl text-green-600 dark:text-green-200"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-green-600 dark:text-green-400 mb-2">القلب</h3>
+                    <p class="text-green-500 dark:text-green-300 font-bold mb-2">الحالة سليمة</p>
+                    <p class="text-gray-600 dark:text-gray-300 text-sm">المؤشرات ضمن الحدود الطبيعية.</p>
+                {% endif %}
+            </div>
+
+            <div class="p-6">
+                <div class="flex justify-between items-center mb-2">
+                    <span class="text-sm font-bold text-gray-500 dark:text-gray-400">نسبة الاحتمال</span>
+                    <span class="text-lg font-bold text-brand-gold">{{ heart_probability }}%</span>
+                </div>
+
+                <div class="w-full bg-gray-200 dark:bg-night-bg rounded-full h-3 overflow-hidden">
+                    <div class="bg-brand-gold h-3 rounded-full transition-all duration-1000 ease-out" style="width: {{ heart_probability }}%"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- بطاقة السكري -->
+        <div class="bg-day-card dark:bg-night-card rounded-3xl shadow-2xl overflow-hidden border border-gray-200 dark:border-blue-900">
+            <div class="p-8 {% if diabetes_result == 'positive' %}bg-red-50 dark:bg-red-900/20{% else %}bg-green-50 dark:bg-green-900/20{% endif %}">
+                {% if diabetes_result == 'positive' %}
+                    <div class="w-20 h-20 bg-red-100 dark:bg-red-800 rounded-full flex items-center justify-center mx-auto mb-4 shadow-inner">
+                        <i class="fas fa-tint text-3xl text-red-600 dark:text-red-200"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-red-600 dark:text-red-400 mb-2">السكري</h3>
+                    <p class="text-red-500 dark:text-red-300 font-bold mb-2">احتمالية ارتفاع</p>
+                    <p class="text-gray-600 dark:text-gray-300 text-sm">مؤشر السكر أعلى من الطبيعي.</p>
+                {% else %}
+                    <div class="w-20 h-20 bg-green-100 dark:bg-green-800 rounded-full flex items-center justify-center mx-auto mb-4 shadow-inner">
+                        <i class="fas fa-tint text-3xl text-green-600 dark:text-green-200"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-green-600 dark:text-green-400 mb-2">السكري</h3>
+                    <p class="text-green-500 dark:text-green-300 font-bold mb-2">الحالة سليمة</p>
+                    <p class="text-gray-600 dark:text-gray-300 text-sm">مؤشر السكر ضمن الطبيعي.</p>
+                {% endif %}
+            </div>
+
+            <div class="p-6">
+                <div class="flex justify-between items-center mb-2">
+                    <span class="text-sm font-bold text-gray-500 dark:text-gray-400">نسبة الاحتمال</span>
+                    <span class="text-lg font-bold text-brand-gold">{{ diabetes_probability }}%</span>
+                </div>
+
+                <div class="w-full bg-gray-200 dark:bg-night-bg rounded-full h-3 overflow-hidden">
+                    <div class="bg-brand-gold h-3 rounded-full transition-all duration-1000 ease-out" style="width: {{ diabetes_probability }}%"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- بطاقة ضغط الدم -->
+        <div class="bg-day-card dark:bg-night-card rounded-3xl shadow-2xl overflow-hidden border border-gray-200 dark:border-blue-900">
+            <div class="p-8 {% if pressure_result == 'positive' %}bg-red-50 dark:bg-red-900/20{% else %}bg-green-50 dark:bg-green-900/20{% endif %}">
+                {% if pressure_result == 'positive' %}
+                    <div class="w-20 h-20 bg-red-100 dark:bg-red-800 rounded-full flex items-center justify-center mx-auto mb-4 shadow-inner">
+                        <i class="fas fa-stethoscope text-3xl text-red-600 dark:text-red-200"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-red-600 dark:text-red-400 mb-2">ضغط الدم</h3>
+                    <p class="text-red-500 dark:text-red-300 font-bold mb-2">احتمالية ارتفاع</p>
+                    <p class="text-gray-600 dark:text-gray-300 text-sm">الضغط أعلى من الحد الطبيعي.</p>
+                {% else %}
+                    <div class="w-20 h-20 bg-green-100 dark:bg-green-800 rounded-full flex items-center justify-center mx-auto mb-4 shadow-inner">
+                        <i class="fas fa-stethoscope text-3xl text-green-600 dark:text-green-200"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-green-600 dark:text-green-400 mb-2">ضغط الدم</h3>
+                    <p class="text-green-500 dark:text-green-300 font-bold mb-2">الحالة سليمة</p>
+                    <p class="text-gray-600 dark:text-gray-300 text-sm">الضغط ضمن الحدود الطبيعية.</p>
+                {% endif %}
+            </div>
+
+            <div class="p-6">
+                <div class="flex justify-between items-center mb-2">
+                    <span class="text-sm font-bold text-gray-500 dark:text-gray-400">نسبة الاحتمال</span>
+                    <span class="text-lg font-bold text-brand-gold">{{ pressure_probability }}%</span>
+                </div>
+
+                <div class="w-full bg-gray-200 dark:bg-night-bg rounded-full h-3 overflow-hidden">
+                    <div class="bg-brand-gold h-3 rounded-full transition-all duration-1000 ease-out" style="width: {{ pressure_probability }}%"></div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="mt-10 flex flex-wrap gap-4 justify-center">
+        <a href="{% url 'home' %}" class="px-6 py-3 bg-gray-200 dark:bg-night-bg text-gray-700 dark:text-white rounded-lg hover:bg-gray-300 dark:hover:bg-blue-900 transition-colors">
+            فحص جديد
+        </a>
+
+        <a href="{% url 'reports' %}" class="px-6 py-3 bg-brand-gold text-white rounded-lg hover:opacity-90 transition-colors">
+            عرض التقرير النهائي
+        </a>
+
+        <button onclick="window.print()" class="px-6 py-3 border border-brand-gold text-brand-gold rounded-lg hover:bg-brand-gold hover:text-white transition-colors">
+            <i class="fas fa-print ml-2"></i> طباعة التقرير
+        </button>
+    </div>
+</div>
+{% endblock %}
