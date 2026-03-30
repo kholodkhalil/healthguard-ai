@@ -20,32 +20,13 @@
         </form>
     </div>
 
-    <!-- بطاقات الإحصائيات -->
-    <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-5 mb-8">
-
-        <div class="bg-white rounded-2xl shadow-lg p-6 text-center">
-            <p class="text-gray-500 mb-2">إجمالي الفحوصات</p>
-            <h3 class="text-4xl font-extrabold text-gray-800">{{ total_records }}</h3>
-        </div>
-
-        <div class="bg-white rounded-2xl shadow-lg p-6 text-center border-t-4 border-red-500">
+    <!-- بطاقة القلب فقط -->
+    <div class="grid grid-cols-1 gap-5 mb-8 justify-items-center">
+        <div class="bg-white rounded-2xl shadow-lg p-6 text-center border-t-4 border-red-500 w-full max-w-sm">
             <p class="text-gray-500 mb-2">نسبة مرضى القلب</p>
             <h3 class="text-4xl font-extrabold text-red-600">{{ heart_percent }}%</h3>
             <p class="text-sm text-gray-500 mt-2">عدد الحالات: {{ heart_cases }}</p>
         </div>
-
-        <div class="bg-white rounded-2xl shadow-lg p-6 text-center border-t-4 border-yellow-500">
-            <p class="text-gray-500 mb-2">نسبة مرضى السكري</p>
-            <h3 class="text-4xl font-extrabold text-yellow-600">{{ diabetes_percent }}%</h3>
-            <p class="text-sm text-gray-500 mt-2">عدد الحالات: {{ diabetes_cases }}</p>
-        </div>
-
-        <div class="bg-white rounded-2xl shadow-lg p-6 text-center border-t-4 border-blue-500">
-            <p class="text-gray-500 mb-2">نسبة ضغط الدم</p>
-            <h3 class="text-4xl font-extrabold text-blue-600">{{ pressure_percent }}%</h3>
-            <p class="text-sm text-gray-500 mt-2">عدد الحالات: {{ pressure_cases }}</p>
-        </div>
-
     </div>
 
     <!-- جدول السجلات -->
@@ -82,9 +63,7 @@
 
                         <td class="py-4 px-4 text-sm text-gray-600">
                             {% with s=record.symptoms_data %}
-                                العمر: {{ s.age }} |
-                                الضغط: {{ s.ap_hi }}/{{ s.ap_lo }} |
-                                السكر: {{ s.gluc }}
+                                العمر: {{ s.age }}
                             {% endwith %}
                         </td>
 
@@ -123,8 +102,7 @@
             </table>
         </div>
 
-        <div class="px-6 py-3 bg-gray-50 border-t text-sm text-gray-500 flex justify-between">
-            <span>إجمالي الفحوصات: {{ total_records }}</span>
+        <div class="px-6 py-3 bg-gray-50 border-t text-sm text-gray-500 text-center">
             <span>HealthGuard</span>
         </div>
     </div>
