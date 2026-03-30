@@ -15,4 +15,7 @@ urlpatterns = [
 
     # صفحة السجلات + التقرير الإحصائي
     path('reports/', views.reports, name='reports'),
+
+    # التقرير الشهري لمرضى القلب
+    path('heart-report/', views.heart_monthly_report, name='heart_report'),
 ]
