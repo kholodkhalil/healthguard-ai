@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
-from django.db.models import Q, Max
+from django.db.models import Q, Max, Count
+from django.db.models.functions import ExtractMonth
 import random
 
 from .models import Patient, DiagnosisRecord, CardioRecord
@@ -157,11 +158,8 @@ def reports(request):
     all_records = DiagnosisRecord.objects.select_related('cardio_record')
 
     total_records = all_records.count()
-
     heart_cases = all_records.filter(prediction_result="Positive (Sick)").count()
-
     diabetes_cases = all_records.filter(cardio_record__gluc__gte=2).count()
-
     pressure_cases = all_records.filter(
         Q(cardio_record__bp_category__icontains="Hypertension") |
         Q(cardio_record__ap_hi__gte=140) |
@@ -182,4 +180,61 @@ def reports(request):
         'heart_percent': heart_percent,
         'diabetes_percent': diabetes_percent,
         'pressure_percent': pressure_percent,
+    })
+
+
+def heart_monthly_report(request):
+    selected_year = (request.GET.get('year') or '').strip()
+    selected_month = (request.GET.get('month') or '').strip()
+
+    records = DiagnosisRecord.objects.filter(prediction_result="Positive (Sick)")
+
+    if selected_year:
+        records = records.filter(date__year=selected_year)
+
+    monthly_stats = (
+        records
+        .annotate(month_number=ExtractMonth('date'))
+        .values('month_number')
+        .annotate(count=Count('id'))
+        .order_by('month_number')
+    )
+
+    month_names = [
+        "يناير", "فبراير", "مارس", "أبريل", "مايو", "يونيو",
+        "يوليو", "أغسطس", "سبتمبر", "أكتوبر", "نوفمبر", "ديسمبر"
+    ]
+
+    monthly_data = {item['month_number']: item['count'] for item in monthly_stats}
+
+    report_rows = []
+    for i in range(1, 13):
+        report_rows.append({
+            'month_number': i,
+            'month_name': month_names[i - 1],
+            'count': monthly_data.get(i, 0),
+        })
+
+    if selected_month:
+        month_num = int(selected_month)
+        report_rows = [row for row in report_rows if row['month_number'] == month_num]
+        chart_labels = [row['month_name'] for row in report_rows]
+        chart_counts = [row['count'] for row in report_rows]
+    else:
+        chart_labels = month_names
+        chart_counts = [monthly_data.get(i, 0) for i in range(1, 13)]
+
+    available_years = DiagnosisRecord.objects.dates('date', 'year', order='DESC')
+    available_years = [d.year for d in available_years]
+
+    total_heart_cases = sum(chart_counts)
+
+    return render(request, 'prediction/heart_report.html', {
+        'chart_labels': chart_labels,
+        'chart_counts': chart_counts,
+        'report_rows': report_rows,
+        'available_years': available_years,
+        'selected_year': selected_year,
+        'selected_month': selected_month,
+        'total_heart_cases': total_heart_cases,
     })
